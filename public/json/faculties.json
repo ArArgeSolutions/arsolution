@@ -1,0 +1,18 @@
+{
+    "faculties": [
+      { "id": "1", "name": "Mühendislik Fakültesi" },
+      { "id": "2", "name": "Fen Edebiyat Fakültesi" },
+      { "id": "3", "name": "İktisadi ve İdari Bilimler Fakültesi" },
+      { "id": "4", "name": "Hukuk Fakültesi" },
+      { "id": "5", "name": "Tıp Fakültesi" },
+      { "id": "6", "name": "Diş Hekimliği Fakültesi" },
+      { "id": "7", "name": "Eczacılık Fakültesi" },
+      { "id": "8", "name": "Sağlık Bilimleri Fakültesi" },
+      { "id": "9", "name": "Eğitim Fakültesi" },
+      { "id": "10", "name": "Güzel Sanatlar Fakültesi" },
+      { "id": "11", "name": "İletişim Fakültesi" },
+      { "id": "12", "name": "Ziraat Fakültesi" },
+      { "id": "13", "name": "Veteriner Fakültesi" },
+      { "id": "14", "name": "Spor Bilimleri Fakültesi" }
+    ]
+}

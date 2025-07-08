@@ -1,0 +1,125 @@
+// i18n.js
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+
+const resources = {
+  en: {
+    translation: {
+      title: "AR Experience",
+      explore: "Explore",
+      interact: "Interact",
+      immerse: "Immerse",
+      aboutUs: "About Us",
+      founders: "Founders",
+      gallery: "Photo Gallery",
+      videoGallery: "Video Gallery",
+      ourTeam: "Our Team",
+      contact: "Contact",
+      home: "Home",
+      about: "About",
+      address: "Address",
+      phone: "Phone",
+      fax: "Fax",
+      goToProduct: "Go to Product",
+      email: "Email",
+      language: "Language",
+      companyName: "AR ARGE TECHNOLOGY INDUSTRY AND TRADE INC.",
+      airadarDescription: "Step into the future of augmented reality.",
+      marbleDescription: "Experience innovative Showroom and Marketing with AR",
+      aboutUsContent: "AR ARGE Technology Industry and Trade Inc., founded by Dr. Aysel Burcu İBİLİ and Assoc. Prof. Dr. Emin İBİLİ, aims to develop groundbreaking projects in the fields of industry and healthcare. Our company aims to make production processes more efficient using digital twin technologies in industry, while also aiming to make diagnosis and treatment processes more effective and accessible in the healthcare sector with augmented reality (AR) applications. We also bring users together with fascinating and educational experiences through innovative virtual reality games. AR ARGE Technology aims to revolutionize many fields, from education to health, from new generation games to digital twins, by using technology at the highest level in the field of augmented reality. In every project, we are determined to enable our users to experience the future today by offering the most suitable and advanced technologies for their needs. We will continue to create added value for society and the sector by maintaining our leadership in the fields of industry and health with the projects we develop.",
+      burcuRole: "Specialist Doctor and Medical Educator",
+      eminRole: "Computer Engineer",
+      nurullahRole: "Consultant",
+      ahmetRole: "Medical Informatics Specialist",
+      neseRole: "Medical Educator",
+      utkuRole: "Radiology Specialist",
+      cetinRole: "Computer Engineer",
+      burcuBio: "Specialist Dr. Aysel Burcu İBİLİ, in addition to her extensive medical experience in Child Health and Diseases, is conducting advanced studies in Medical Education at Ege University and is a final-stage doctoral student. Her Ph.D. thesis in Medical Education focuses on the integration of simulation-based applications into the medical education curriculum. She has published various SSCI-indexed publications, especially on Metaverse-based medical education. In 2023, at the Teknofest competition held in Ankara, she and Assoc. Prof. Dr. Emin İBİLİ achieved fourth place with their project 'AI-Assisted Radiological Evaluation and Simultaneous Sharing in Multi-Player Augmented Reality Environments (AIRADAR)'. She has accelerated her work in this field over the last three years and aims to provide innovative solutions in healthcare with these studies.",
+      eminBio: "Assoc. Prof. Dr. Emin İBİLİ graduated from Ege University's Department of Computer Engineering and completed his first Ph.D. in 2013 on the applications of augmented reality technologies in geometry education. He is currently pursuing a second Ph.D. in the Department of Biostatistics and Medical Informatics at Akdeniz University, focusing on AI-supported segmentation and integration into augmented reality (AR) environments. Between 2017-2018, he conducted research on the use of AR technologies in education at the Human-Computer Interaction Laboratory at the University of South Australia. In 2023, he won second place in the Education Technologies category with the MEDAR project and fourth place in the Entrepreneurship competition with the AIRADAR project at the Teknofest competition held in Istanbul and Ankara, respectively. He also achieved third place in the higher education category in the Web-Based Educational Content Development competition organized by the Ministry of National Education. He has numerous national and international publications and projects in these fields."
+    },
+  },
+  tr: {
+    translation: {
+      title: "AR Deneyimi",
+      explore: "Keşfet",
+      interact: "Etkileşime",
+      immerse: "Geç",
+      aboutUs: "Hakkımızda",
+      founders: "Kurucular",
+      gallery: "Foto Galeri",
+      videoGallery: "Video Galeri",
+      ourTeam: "Ekibimiz",
+      contact: "İletişim",
+      home: "Ana Sayfa",
+      about: "Hakkımızda",
+      address: "Adres",
+      phone: "Telefon",
+      fax: "Faks",
+      goToProduct: "Ürüne Git",
+      email: "E-posta",
+      language: "Dil",
+      companyName: "AR ARGE TEKNOLOJİ SANAYİ VE TİCARET A.Ş.",
+      airadarDescription: "Artırılmış gerçekliğin geleceğine adım atın.",
+      marbleDescription: "Yenilikçi Showroom ve Pazarlamayı AR ile Deneyimleyin",
+      aboutUsContent: "AR ARGE Teknoloji Sanayi ve Ticaret A.Ş., sanayi ve sağlık alanlarında çığır açan projeler geliştirmek amacıyla Uşak Üniversitesi Çocuk Sağlığı ve Hastalıkları Bölümü öğretim üyesi Dr. Aysel Burcu İBİLİ ve Afyonkarahisar Sağlık Bilimleri Üniversitesi öğretim üyesi Doç. Dr. Emin İBİLİ tarafından kurulmuştur. Şirketimiz, sanayide dijital ikiz teknolojilerini kullanarak üretim süreçlerini daha verimli hale getirmeyi hedeflerken, sağlık sektöründe artırılmış gerçeklik (AR) uygulamalarıyla teşhis ve tedavi süreçlerini daha etkili ve erişilebilir kılmayı amaçlamaktadır. Aynı zamanda, yenilikçi sanal gerçeklik oyunları ile kullanıcıları büyüleyici ve öğretici deneyimlerle buluşturuyoruz. AR ARGE Teknoloji, artırılmış gerçeklik alanında teknolojiyi en üst seviyede kullanarak eğitimden sağlığa, yeni nesil oyunlardan dijital ikizlere kadar birçok alanda devrim yaratmayı hedeflemektedir. Her projemizde, kullanıcılarımızın ihtiyaçlarına en uygun ve en ileri teknolojileri sunarak, geleceği bugünden yaşamalarını sağlamaya kararlıyız. Geliştirdiğimiz projelerle, sanayi ve sağlık alanlarında öncü olmayı sürdürerek, topluma ve sektöre katma değer yaratmaya devam edeceğiz.",
+      burcuRole: "Uzman Doktor ve Tıp Eğitimcisi",
+      eminRole: "Bilgisayar Mühendisi",
+      nurullahRole: "Danışman",
+      ahmetRole: "Tıp Bilişim Uzmanı",
+      neseRole: "Tıp Eğitmeni",
+      utkuRole: "Radyoloji Uzmanı",
+      cetinRole: "Bilgisayar Mühendisi",
+      burcuBio: "Uzman Dr. Aysel Burcu İBİLİ, Çocuk Sağlığı ve Hastalıkları alanındaki kapsamlı doktorluk tecrübesinin yanı sıra, Ege Üniversitesi’nde Tıp Eğitimi alanında ileri düzey çalışmalar yürütmekte ve son dönem doktora öğrencisidir. Tıp Eğitimi Doktora tezi, simülasyon tabanlı uygulamaların tıp eğitimi müfredatına entegrasyonu üzerinedir. Bu alanda, özellikle Metaverse tabanlı tıp eğitimi üzerine, SSCI indeksli çeşitli yayınlara sahiptir. 2023 yılında Ankara’da düzenlenen Teknofest yarışmasında, Doç. Dr. Emin İBİLİ ile birlikte geliştirdikleri “Yapay Zeka Destekli Radyolojik Değerlendirme ve Çoklu Oyunculu Artırılmış Gerçeklik Ortamlarında Eş Zamanlı Paylaşım (AIRADAR)” projesiyle dördüncülük elde etmiştir. Son üç yıldır bu alandaki çalışmalarına hız vermiştir ve bu çalışmalar sağlık alanında yenilikçi çözümler sunmayı hedeflemektedir.",
+      eminBio: "Doç. Dr. Emin İBİLİ, Ege Üniversitesi Bilgisayar Mühendisliği bölümünden mezun olup, ilk doktorasını 2013 yılında artırılmış gerçeklik teknolojilerinin geometri eğitimindeki uygulamaları üzerine tamamlamıştır. Halen Akdeniz Üniversitesi Biyoistatistik ve Tıp Bilişimi Anabilim Dalı’nda devam eden ikinci doktora çalışmasında, yapay zeka destekli segmentasyon ve artırılmış gerçeklik (AR) ortamlarına entegrasyonu üzerine yoğunlaşmaktadır. 2017-2018 yılları arasında University of South Australia’daki İnsan-Bilgisayar Etkileşimi Laboratuvarı’nda eğitimde AR teknolojilerinin kullanımı üzerine araştırmalar yürütmüştür. 2023 yılında İstanbul’da gerçekleştirilen Teknofest yarışmasında Eğitim Teknolojileri alanında MEDAR projesi ile ikincilik, Ankara’daki Girişimcilik yarışmasında ise AIRADAR projesi ile dördüncülük kazanmıştır. Ayrıca Milli Eğitim Bakanlığı tarafından gerçekleştirilen Web Tabanlı Eğitim İçeriği Geliştirme yarışmasında yüksek öğretim kategorisinde üçüncü olmuştur. Bu alanlarda ulusal ve uluslararası düzeyde çok sayıda yayın ve projeye imza atmıştır."
+    },
+  },
+  zh: {
+    translation: {
+      title: "增强现实体验",
+      explore: "探索",
+      interact: "互动",
+      immerse: "沉浸",
+      aboutUs: "关于我们",
+      founders: "创始人",
+      gallery: "照片画廊",
+      videoGallery: "视频画廊",
+      ourTeam: "我们的团队",
+      contact: "联系",
+      home: "主页",
+      about: "关于",
+      address: "地址",
+      phone: "电话",
+      fax: "传真",
+      goToProduct: "去产品",
+      email: "电子邮件",
+      language: "语言",
+      companyName: "AR ARGE 科技工业贸易有限公司",
+      airadarDescription: "迈入增强现实的未来。",
+      marbleDescription: "通过 XR 体验创新的展厅和营销",
+      aboutUsContent: "AR ARGE 科技工业贸易有限公司，由 Uşak 大学儿科健康与疾病系讲师 Dr. Aysel Burcu İBİLİ 和 Afyonkarahisar 卫生科学大学讲师 Doç. Dr. Emin İBİLİ 成立，旨在开发工业和医疗领域的开创性项目。我们的公司旨在通过工业中的数字孪生技术提高生产效率，同时通过增强现实 (AR) 应用使医疗行业的诊断和治疗过程更加有效和便捷。我们还通过创新的虚拟现实游戏将用户带入令人着迷和具有教育意义的体验中。AR ARGE 科技致力于通过在增强现实领域使用最先进的技术，在教育、健康、新一代游戏到数字孪生等众多领域创造革命。我们在每一个项目中都致力于通过为用户提供最适合和最先进的技术，让用户今天就体验未来。我们将继续通过开发的项目在工业和健康领域保持领先地位，为社会和行业创造附加价值。",
+      burcuRole: "专家医生和医学教育工作者",
+      eminRole: "计算机工程师",
+      nurullahRole: "顾问",
+      ahmetRole: "医学信息学专家",
+      neseRole: "医学教育工作者",
+      utkuRole: "放射学专家",
+      cetinRole: "计算机工程师",
+      burcuBio: "专家 Dr. Aysel Burcu İBİLİ 除了在儿童健康与疾病方面的广泛医学经验外，还在 Ege 大学进行医学教育高级研究，并且是一名最后阶段的博士生。她的医学教育博士论文侧重于将基于模拟的应用整合到医学教育课程中。她特别在基于元宇宙的医学教育方面发表了各种 SSCI 索引的出版物。2023年，在安卡拉举行的Teknofest竞赛中，她与副教授Dr. Emin İBİLİ一起通过他们的项目“AI-Assisted Radiological Evaluation and Simultaneous Sharing in Multi-Player Augmented Reality Environments (AIRADAR)”获得了第四名。她在过去三年中加速了这一领域的工作，旨在通过这些研究在医疗领域提供创新解决方案。",
+      eminBio: "副教授 Dr. Emin İBİLİ 毕业于 Ege 大学计算机工程系，并于 2013 年完成了关于增强现实技术在几何教育中应用的第一个博士学位。他目前正在 Akdeniz 大学生物统计学和医学信息学系攻读第二个博士学位，专注于 AI 支持的分割和增强现实 (AR) 环境的集成。2017-2018 年期间，他在南澳大利亚大学的人机交互实验室进行了关于在教育中使用 AR 技术的研究。2023 年，他在伊斯坦布尔和安卡拉举行的 Teknofest 比赛中分别凭借 MEDAR 项目和 AIRADAR 项目获得了教育技术类别的第二名和创业比赛的第四名。他还在国家教育部组织的基于网络的教育内容开发竞赛的高等教育类别中获得第三名。在这些领域，他拥有众多的国家和国际出版物和项目。"
+    },
+  },
+  // Add other languages similarly
+};
+
+i18n
+  .use(initReactI18next)
+  .init({
+    resources,
+    lng: 'tr', // Default language
+    fallbackLng: 'en', // Fallback language in case of missing translations
+    interpolation: {
+      escapeValue: false, // React already escapes values
+    },
+  });
+
+export default i18n;

@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  ararge:
+    build: .
+    image: ararge
+    container_name: ararge
+    ports:
+      - "3006:3006"
+    environment:
+      - PORT=3006
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run dev

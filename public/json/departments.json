@@ -1,0 +1,18 @@
+{
+  "departments": {
+    "1": ["Bilgisayar Mühendisliği", "Elektrik-Elektronik Mühendisliği", "İnşaat Mühendisliği", "Makine Mühendisliği", "Kimya Mühendisliği", "Endüstri Mühendisliği", "Biyomedikal Mühendisliği", "Yazılım Mühendisliği", "Çevre Mühendisliği", "Jeoloji Mühendisliği", "Gıda Mühendisliği", "Geomatik Mühendisliği", "Maden Mühendisliği", "Mekatronik Mühendisliği", "Malzeme Mühendisliği", "Otomotiv Mühendisliği", "Enerji Sistemleri Mühendisliği", "Jeofizik Mühendisliği", "Fizik Mühendisliği", "Gemi İnşaatı ve Gemi Makineleri Mühendisliği", "Gemi Makineleri İşletme Mühendisliği", "Endüstriyel Tasarım", "Petrol ve Doğalgaz Mühendisliği", "Kontrol ve Otomasyon Mühendisliği", "Uçak Mühendisliği", "Uzay Mühendisliği"],
+    "2": ["Fizik", "Kimya", "Biyoloji", "Matematik", "Felsefe", "Tarih", "Alman Dili ve Edebiyatı", "Fransız Dili ve Edebiyatı", "Türk Dili ve Edebiyatı", "İngiliz Dili ve Edebiyatı", "Moleküler Biyoloji ve Genetik", "Arkeoloji", "Antropoloji", "Sanat Tarihi", "Çağdaş Yunan Dili ve Edebiyatı", "Arap Dili ve Edebiyatı", "Dilbilimi", "Protohistorya ve Ön Asya Arkeolojisi", "Sümeroloji", "Leh Dili ve Edebiyatı", "Urdu Dili ve Edebiyatı", "Latin Dili ve Edebiyatı", "Kore Dili ve Edebiyatı", "Japon Dili ve Edebiyatı", "İspanyol Dili ve Edebiyatı", "İtalyan Dili ve Edebiyatı", "Hungaroloji", "Ermeni Dili ve Kültürü", "Fars Dili ve Edebiyatı", "Bulgar Dili ve Edebiyatı", "Hindoloji", "Bilgisayar Teknolojisi ve Bilişim Sistemleri", "Biyoteknoloji", "Psikoloji"],
+    "3": ["İktisat", "İşletme", "Ekonometri", "Kamu Yönetimi", "Maliye", "Çalışma Ekonomisi ve Endüstri İlişkileri", "Siyaset Bilimi ve Kamu Yönetimi", "Uluslararası İlişkiler", "Uluslararası Ticaret ve Finansman", "Yönetim Bilişim Sistemleri", "Halkla İlişkiler ve Reklamcılık"],
+    "4": ["Hukuk"],
+    "5": ["Tıp"],
+    "6": ["Diş Hekimliği"],
+    "7": ["Eczacılık"],
+    "8": ["Acil Yardım ve Afet Yönetimi", "Beslenme ve Diyetetik", "Hemşirelik", "Ebelik", "Fizyoterapi ve Rehabilitasyon", "Çocuk Gelişimi", "Ergoterapi", "Dil ve Konuşma Terapisi", "Sağlık Yönetimi", "Sosyal Hizmet"],
+    "9": ["Türkçe Öğretmenliği", "İngilizce Öğretmenliği", "İlköğretim Matematik Öğretmenliği", "Fen Bilgisi Öğretmenliği", "Sınıf Öğretmenliği", "Özel Eğitim Öğretmenliği", "Okul Öncesi Öğretmenliği", "Rehberlik ve Psikolojik Danışmanlık"],
+    "10": ["İç Mimarlık ve Çevre Tasarımı", "Resim", "Heykel", "Grafik Tasarım", "Sinema ve Televizyon", "Sahne Sanatları", "Moda ve Tekstil Tasarımı", "Görsel İletişim Tasarımı"],
+    "11": ["Gazetecilik", "Radyo, Televizyon ve Sinema", "Halkla İlişkiler ve Tanıtım"],
+    "12": ["Bahçe Bitkileri", "Bitki Koruma", "Tarla Bitkileri", "Tarımsal Biyoteknoloji", "Tarım Ekonomisi", "Tarımsal Yapılar ve Sulama", "Süt Teknolojisi", "Su Ürünleri Mühendisliği", "Toprak Bilimi ve Bitki Besleme", "Zootekni"],
+    "13": ["Veterinerlik"],
+    "14": ["Spor Yöneticiliği", "Rekreasyon", "Orman Endüstrisi Mühendisliği"]
+  }
+}
