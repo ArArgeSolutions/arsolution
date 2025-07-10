@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import { RateLimiterMemory } from "rate-limiter-flexible";
 
 const rateLimiter = new RateLimiterMemory({
-  points: 5,       // 5 istek hakkı
+  points: 2,       // 5 istek hakkı
   duration: 60,    // 60 saniyede
 });
 

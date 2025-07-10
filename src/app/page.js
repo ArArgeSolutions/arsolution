@@ -1,5 +1,6 @@
 "use client";
 import "./styles/apple.css";
+import "react-toastify/dist/ReactToastify.css";
 import Head from "next/head";
 import { FiArrowRight } from "react-icons/fi";
 import {
@@ -12,6 +13,7 @@ import {
 import { useState, useEffect, useRef } from "react";
 import * as THREE from "three";
 import { useTranslation } from "react-i18next";
+import { ToastContainer, toast } from "react-toastify";
 import { motion } from "framer-motion";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -234,7 +236,7 @@ export default function Home() {
     e.preventDefault();
 
     if (!recaptchaToken) {
-      alert("Lütfen reCAPTCHA doğrulamasını tamamlayın.");
+      toast.success("Lütfen reCAPTCHA doğrulamasını tamamlayın.");
       return;
     }
 
@@ -246,11 +248,14 @@ export default function Home() {
       });
 
       if (!res.ok) throw new Error("Gönderilemedi");
-      alert("Mesaj gönderildi!");
+      toast.success("Mesaj gönderildi!");
       setForm({ name: "", email: "", message: "" });
+      setTimeout(() => {
+        setShowChat(false);
+      }, 1500);
     } catch (err) {
       console.error("HATA:", err);
-      alert("Hata oluştu.");
+      toast.success("Hata oluştu.");
     }
   };
 
@@ -266,8 +271,6 @@ export default function Home() {
         />
       </Head>
       // Menu bar
-
-      
       {/* Apple-like Navbar */}
       <nav className="apple-navbar">
         <div className="flex items-center space-x-2 ml-15">
@@ -334,7 +337,7 @@ export default function Home() {
       <div className="w-full flex text-main dark:text-main-invert justify-center items-center p-6 md:p-10 text-center">
         <div
           ref={canvasContainerRef}
-          className="w-full h-[500px] bg-transparent"
+          className="canvas-container"
           style={{
             position: "fixed",
             top: "20px",
@@ -350,7 +353,7 @@ export default function Home() {
       {/* Sabit Bize Ulaşın Butonu */}
       <button
         onClick={() => setShowChat(!showChat)}
-        className="fixed bottom-4 right-4 z-999 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full shadow-lg transition duration-300"
+        className="fixed bottom-4 right-4 z-[1000] bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full shadow-lg transition duration-300"
       >
         {t("contactUs")}
       </button>
@@ -359,7 +362,7 @@ export default function Home() {
         <div
           ref={popupRef}
           className="fixed bottom-20 right-4 z-[1000] bg-white p-4 rounded-lg shadow-xl w-80
-      transform transition-all duration-300 translate-y-10 opacity-0"
+      transform transition-all duration-300 translate-y-10 opacity-0 mobile-support-popup"
         >
           <h2 className="text-lg text-black font-semibold mb-2">
             {t("contactForm")}
@@ -406,8 +409,8 @@ export default function Home() {
         </div>
       )}
       {/* Slayt Gösterisi En Üste Alındı */}
-      <div className="relative w-full pt-[100px] flex flex-col justify-center items-center px-4 md:px-8">
-        <div className="relative w-full max-w-full h-[550px] overflow-hidden rounded-lg">
+      <div className="relative w-full pt-[40px] md:pt-[100px] flex flex-col justify-center items-center px-4 md:px-8">
+        <div className="relative w-full max-w-full h-[350px] md:h-[550px] overflow-hidden rounded-lg">
           <div
             className="flex w-full h-full transition-transform duration-700 ease-in-out"
             style={{ transform: `translateX(-${currentImageIndex2 * 100}%)` }}
@@ -440,7 +443,7 @@ export default function Home() {
         </div>
 
         {/* Sayfa Göstergesi (Küçük Noktalar) */}
-        <div className="mt-4 flex justify-center space-x-2">
+        <div className="mt-2 md:mt-4 flex justify-center space-x-2">
           {brochures.map((_, index) => (
             <span
               key={index}
@@ -813,7 +816,7 @@ export default function Home() {
       <Sticker />
       <section
         id="contact"
-        className="py-16 px-4 md:px-10 text-white text-main dark:text-main-invert bg-transparent bg-[url('/s-pattdotern.png')]"
+        className="py-16 px-4 md:px-10 text-white text-main dark:text-main-invert bg-transparent bg-[url('/s-pattdotern.png') ]"
       >
         {/* Sol taraf: iletişim bilgileri */}
         <div className="max-w-6xl mx-auto flex flex-col text-main dark:text-main-invert md:flex-row justify-between items-start gap-10">
@@ -837,7 +840,7 @@ export default function Home() {
           </div>
 
           {/* Sağ taraf: sosyal medya ikonları */}
-          <div className="flex flex-col space-y-4 text-2xl text-main dark:text-main-invert mt-6 md:mt-0">
+          <div className="social-icons-mobile flex flex-col space-y-4 text-2xl text-main dark:text-main-invert mt-6 md:mt-0">
             <a
               href="https://www.facebook.com/people/Ar-Arge-Technologi/pfbid045Vk5NdAeac28odVbHmXjE6apVYprJMz5DyLfP5ZH9hB2khsLRNoT1wauKPT4XR9l/?eav=AfYL5h6PYDRFYVFed9k3G9VhYuUdxIT4bKC6R34VejQQacZALuS5Irxw_lRMV9sh8iE&paipv=0"
               target="_blank"
@@ -865,6 +868,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <ToastContainer position="bottom-right" autoClose={3000} />
     </div>
   );
 }
