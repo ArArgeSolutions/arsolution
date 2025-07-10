@@ -1,5 +1,6 @@
 "use client";
 import "./styles/apple.css";
+import "react-toastify/dist/ReactToastify.css";
 import Head from "next/head";
 import { FiArrowRight } from "react-icons/fi";
 import {
@@ -12,8 +13,10 @@ import {
 import { useState, useEffect, useRef } from "react";
 import * as THREE from "three";
 import { useTranslation } from "react-i18next";
+import { ToastContainer, toast } from "react-toastify";
 import { motion } from "framer-motion";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import ReCAPTCHA from "react-google-recaptcha";
 import i18n from "../../i18n";
 
 export default function Home() {
@@ -22,8 +25,14 @@ export default function Home() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentImageIndex2, setCurrentImageIndex2] = useState(0);
+  const [recaptchaToken, setRecaptchaToken] = useState("");
 
   const [showChat, setShowChat] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const popupRef = useRef(null);
+  const [isGalleryHovered, setIsGalleryHovered] = useState(false);
+  const [hoveredImageIndex, setHoveredImageIndex] = useState(null);
+
   const [form, setForm] = useState({ name: "", email: "", message: "" });
 
   // Slayt resimlerini belirleme
@@ -66,14 +75,41 @@ export default function Home() {
     }, [theme]);
 
     return (
-      <button
+      <div
         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        className="px-4 py-2 rounded mx-4  bg-gray-300 dark:bg-gray-700 text-black dark:text-white"
+        className={`w-24 h-10 flex items-center rounded-full cursor-pointer px-1 transition-colors duration-500 ${
+          theme === "dark" ? "bg-gray-700" : "bg-gray-300"
+        }`}
       >
-        {theme === "dark" ? "🌞" : "🌙"}
-      </button>
+        <div
+          className={`w-8 h-8 bg-white rounded-full shadow-md transform transition-transform duration-500 flex items-center justify-center text-lg ${
+            theme === "dark" ? "translate-x-0" : "translate-x-14"
+          }`}
+        >
+          {theme === "dark" ? "🌙" : "🌞"}
+        </div>
+      </div>
     );
   }
+
+  useEffect(() => {
+    if (showChat) {
+      setIsVisible(true);
+      // animasyonu başlatmak için kısa gecikmeyle sınıf ekle
+      setTimeout(() => {
+        popupRef.current?.classList.remove("translate-y-10", "opacity-0");
+        popupRef.current?.classList.add("translate-y-0", "opacity-100");
+      }, 10); // sadece 10ms gecikme animasyonun başlamasını sağlar
+    } else {
+      // önce animasyonlu çıkış ver
+      popupRef.current?.classList.remove("translate-y-0", "opacity-100");
+      popupRef.current?.classList.add("translate-y-10", "opacity-0");
+
+      // sonra DOM'dan kaldır
+      const timeout = setTimeout(() => setIsVisible(false), 300);
+      return () => clearTimeout(timeout);
+    }
+  }, [showChat]);
 
   useEffect(() => {
     i18n.changeLanguage(language);
@@ -199,19 +235,27 @@ export default function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!recaptchaToken) {
+      toast.success("Lütfen reCAPTCHA doğrulamasını tamamlayın.");
+      return;
+    }
+
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, token: recaptchaToken }),
       });
 
       if (!res.ok) throw new Error("Gönderilemedi");
-      alert("Mesaj gönderildi!");
+      toast.success("Mesaj gönderildi!");
       setForm({ name: "", email: "", message: "" });
+      setTimeout(() => {
+        setShowChat(false);
+      }, 1500);
     } catch (err) {
       console.error("HATA:", err);
-      alert("Hata oluştu.");
+      toast.success("Hata oluştu.");
     }
   };
 
@@ -252,39 +296,48 @@ export default function Home() {
             Online Kayıt
           </a>
         </div>
-        <div className="apple-navbar-right relative">
+        <div className=" flex apple-navbar-right relative gap-x-4">
           <ThemeToggle />
-          <button
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="bg-black text-white font-medium py-2 px-4 border border-gray-600 rounded hover:bg-gray-800 transition"
-          >
-            {language === "tr"
-              ? "Türkçe"
-              : language === "en"
-              ? "English"
-              : "中文"}
-          </button>
+          <div className="relative inline-block text-left">
+  <button
+    onClick={() => setDropdownOpen(!dropdownOpen)}
+    className="bg-black text-white font-medium py-2 px-4 border border-gray-600 rounded hover:bg-gray-800 transition-all duration-300 flex items-center gap-2"
+  >
+    🌐 {language === "tr" ? "Türkçe" : language === "en" ? "English" : "中文"}
+    <span
+      className={`transform transition-transform duration-300 ${
+        dropdownOpen ? "rotate-180" : ""
+      }`}
+    >
+      ▾
+    </span>
+  </button>
 
-          {dropdownOpen && (
-            <ul className="absolute right-0 mt-2 w-32 bg-black text-white border border-gray-600 rounded shadow-lg z-50">
-              {[
-                { value: "tr", label: "Türkçe" },
-                { value: "en", label: "English" },
-                { value: "zh", label: "中文" },
-              ].map((lang) => (
-                <li
-                  key={lang.value}
-                  className="px-4 py-2 hover:bg-blue-600 hover:text-white cursor-pointer"
-                  onClick={() => {
-                    setLanguage(lang.value);
-                    setDropdownOpen(false);
-                  }}
-                >
-                  {lang.label}
-                </li>
-              ))}
-            </ul>
-          )}
+  <ul
+    className={`absolute right-0 mt-2 w-36 bg-black text-white border border-gray-600 rounded shadow-lg z-50 overflow-hidden transition-all duration-300 origin-top transform ${
+      dropdownOpen
+        ? "scale-100 opacity-100"
+        : "scale-95 opacity-0 pointer-events-none"
+    }`}
+  >
+    {[
+      { value: "tr", label: "Türkçe" },
+      { value: "en", label: "English" },
+      { value: "zh", label: "中文" },
+    ].map((lang) => (
+      <li
+        key={lang.value}
+        className="px-4 py-2 hover:bg-blue-600 cursor-pointer transition-colors duration-200"
+        onClick={() => {
+          setLanguage(lang.value);
+          setDropdownOpen(false);
+        }}
+      >
+        {lang.label}
+      </li>
+    ))}
+  </ul>
+</div>
         </div>
       </nav>
       {/* Main Section */}
@@ -293,14 +346,14 @@ export default function Home() {
       <div className="w-full flex text-main dark:text-main-invert justify-center items-center p-6 md:p-10 text-center">
         <div
           ref={canvasContainerRef}
-          className="w-full h-[500px] bg-transparent"
+          className="canvas-container"
           style={{
             position: "fixed",
             top: "20px",
             right: "5px",
             width: "300px",
             height: "300px",
-            zIndex: 50,
+            zIndex: 999,
             pointerEvents: "none",
           }}
         ></div>
@@ -309,14 +362,20 @@ export default function Home() {
       {/* Sabit Bize Ulaşın Butonu */}
       <button
         onClick={() => setShowChat(!showChat)}
-        className="fixed bottom-4 right-4 z-50 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full shadow-lg transition duration-300"
+        className="fixed bottom-4 right-4 z-[1000] bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full shadow-lg transition duration-300"
       >
         {t("contactUs")}
       </button>
       {/* Popup Form */}
-      {showChat && (
-        <div className="fixed bottom-20 right-4 z-50 bg-white p-4 rounded-lg shadow-xl w-80">
-          <h2 className="text-lg text-black font-semibold mb-2">{t("contactForm")}</h2>
+      {isVisible && (
+        <div
+          ref={popupRef}
+          className="fixed bottom-20 right-4 z-[1000] bg-white p-4 rounded-lg shadow-xl w-80
+      transform transition-all duration-300 translate-y-10 opacity-0 mobile-support-popup"
+        >
+          <h2 className="text-lg text-black font-semibold mb-2">
+            {t("contactForm")}
+          </h2>
           <form onSubmit={handleSubmit}>
             <input
               type="text"
@@ -344,6 +403,11 @@ export default function Home() {
               onChange={handleChange}
               className="w-full text-black p-2 mb-2 border rounded"
             />
+            <ReCAPTCHA
+              sitekey="6Ld-Hn4rAAAAAKHk4TYueva3c7opk5yZVj1SiDRL"
+              onChange={(token) => setRecaptchaToken(token)}
+              className="my-4"
+            />
             <button
               type="submit"
               className="bg-blue-600 text-white px-4 py-2 rounded w-full"
@@ -354,8 +418,8 @@ export default function Home() {
         </div>
       )}
       {/* Slayt Gösterisi En Üste Alındı */}
-      <div className="relative w-full pt-[100px] flex flex-col justify-center items-center px-4 md:px-8">
-        <div className="relative w-full max-w-full h-[550px] overflow-hidden rounded-lg">
+      <div className="relative w-full pt-[40px] md:pt-[100px] flex flex-col justify-center items-center px-4 md:px-8">
+        <div className="relative w-full max-w-full h-[350px] md:h-[550px] overflow-hidden rounded-lg">
           <div
             className="flex w-full h-full transition-transform duration-700 ease-in-out"
             style={{ transform: `translateX(-${currentImageIndex2 * 100}%)` }}
@@ -388,7 +452,7 @@ export default function Home() {
         </div>
 
         {/* Sayfa Göstergesi (Küçük Noktalar) */}
-        <div className="mt-4 flex justify-center space-x-2">
+        <div className="mt-2 md:mt-4 flex justify-center space-x-2">
           {brochures.map((_, index) => (
             <span
               key={index}
@@ -557,7 +621,7 @@ export default function Home() {
                     : "opacity-0 z-0"
                 } absolute`}
                 style={{
-                  boxShadow: "0 0 20px rgba(255, 255, 255, 0.5)", // Daha küçük cihazlar için daha yumuşak bir gölge
+                  boxShadow: "0 0 20px rgba(255, 255, 255, 0.5)",
                   transition: "opacity 1s ease-in-out",
                 }}
               />
@@ -591,9 +655,16 @@ export default function Home() {
       {/* Spatial.io tarzı yatay kaydırmalı galeri */}
       <section
         id="gallery"
-        className="py-20 bg-transparent text-main dark:text-main-invert bg-[url('/dots-pattern.png')]"
+        onMouseEnter={() => setIsGalleryHovered(true)}
+        onMouseLeave={() => setIsGalleryHovered(false)}
+        className="relative py-20 bg-transparent text-main dark:text-main-invert bg-[url('/dots-pattern.png')]"
       >
-        <div className="container mx-auto px-4">
+        {/* Karartma efekti */}
+        {/* {isGalleryHovered && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm z-40 pointer-events-none transition-opacity duration-300"></div>
+        )} */}
+
+        <div className="container mx-auto px-4 relative z-50">
           <h2 className="text-4xl font-bold mb-10 text-center">
             {t("gallery")}
           </h2>
@@ -614,19 +685,44 @@ export default function Home() {
           >
             <div
               id="scrollGallery"
-              className="flex w-max animate-scrollGallery gap-6"
-              style={{ animationDuration: "20s" }}
+              className="flex animate-scrollGallery gap-6"
+              style={{
+                animation: "scrollGallery 30s linear infinite",
+                minWidth: `${images.length * 2 * 420}px`,
+              }}
             >
-              {/* Sonsuz döngü için 2 defa aynı içerik */}
               {[...images, ...images].map((src, index) => (
                 <div
                   key={index}
-                  className="flex-shrink-0 hover:scale-105 transition-transform duration-500"
+                  onMouseEnter={() => setHoveredImageIndex(index)}
+                  onMouseLeave={() => setHoveredImageIndex(null)}
+                  className={`flex-shrink-0 transition-transform duration-500 transform ${
+                    hoveredImageIndex === index ? "scale-105 z-50" : ""
+                  } ${
+                    hoveredImageIndex !== null && hoveredImageIndex !== index
+                      ? "opacity-30"
+                      : "opacity-100"
+                  }`}
+                  style={{
+                    width: "400px",
+                    height: "300px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "#111827",
+                    borderRadius: "1rem",
+                    overflow: "hidden",
+                    transition: "opacity 0.3s ease, transform 0.3s ease",
+                  }}
                 >
                   <img
                     src={src}
                     alt={`Gallery Image ${index + 1}`}
-                    className="h-[400px] w-auto object-contain rounded-xl"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
                   />
                 </div>
               ))}
@@ -729,7 +825,7 @@ export default function Home() {
       <Sticker />
       <section
         id="contact"
-        className="py-16 px-4 md:px-10 text-white text-main dark:text-main-invert bg-transparent bg-[url('/s-pattdotern.png')]"
+        className="py-16 px-4 md:px-10 text-white text-main dark:text-main-invert bg-transparent bg-[url('/s-pattdotern.png') ]"
       >
         {/* Sol taraf: iletişim bilgileri */}
         <div className="max-w-6xl mx-auto flex flex-col text-main dark:text-main-invert md:flex-row justify-between items-start gap-10">
@@ -753,7 +849,7 @@ export default function Home() {
           </div>
 
           {/* Sağ taraf: sosyal medya ikonları */}
-          <div className="flex flex-col space-y-4 text-2xl text-main dark:text-main-invert mt-6 md:mt-0">
+          <div className="social-icons-mobile flex flex-col space-y-4 text-2xl text-main dark:text-main-invert mt-6 md:mt-0">
             <a
               href="https://www.facebook.com/people/Ar-Arge-Technologi/pfbid045Vk5NdAeac28odVbHmXjE6apVYprJMz5DyLfP5ZH9hB2khsLRNoT1wauKPT4XR9l/?eav=AfYL5h6PYDRFYVFed9k3G9VhYuUdxIT4bKC6R34VejQQacZALuS5Irxw_lRMV9sh8iE&paipv=0"
               target="_blank"
@@ -781,6 +877,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <ToastContainer position="bottom-right" autoClose={3000} />
     </div>
   );
 }
