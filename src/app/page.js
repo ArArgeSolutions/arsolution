@@ -14,6 +14,7 @@ import * as THREE from "three";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import ReCAPTCHA from "react-google-recaptcha";
 import i18n from "../../i18n";
 
 export default function Home() {
@@ -22,8 +23,14 @@ export default function Home() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentImageIndex2, setCurrentImageIndex2] = useState(0);
+  const [recaptchaToken, setRecaptchaToken] = useState("");
 
   const [showChat, setShowChat] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const popupRef = useRef(null);
+  const [isGalleryHovered, setIsGalleryHovered] = useState(false);
+  const [hoveredImageIndex, setHoveredImageIndex] = useState(null);
+
   const [form, setForm] = useState({ name: "", email: "", message: "" });
 
   // Slayt resimlerini belirleme
@@ -66,14 +73,41 @@ export default function Home() {
     }, [theme]);
 
     return (
-      <button
+      <div
         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        className="px-4 py-2 rounded mx-4  bg-gray-300 dark:bg-gray-700 text-black dark:text-white"
+        className={`w-24 h-10 flex items-center rounded-full cursor-pointer px-1 transition-colors duration-500 ${
+          theme === "dark" ? "bg-gray-700" : "bg-gray-300"
+        }`}
       >
-        {theme === "dark" ? "🌞" : "🌙"}
-      </button>
+        <div
+          className={`w-8 h-8 bg-white rounded-full shadow-md transform transition-transform duration-500 flex items-center justify-center text-lg ${
+            theme === "dark" ? "translate-x-0" : "translate-x-14"
+          }`}
+        >
+          {theme === "dark" ? "🌙" : "🌞"}
+        </div>
+      </div>
     );
   }
+
+  useEffect(() => {
+    if (showChat) {
+      setIsVisible(true);
+      // animasyonu başlatmak için kısa gecikmeyle sınıf ekle
+      setTimeout(() => {
+        popupRef.current?.classList.remove("translate-y-10", "opacity-0");
+        popupRef.current?.classList.add("translate-y-0", "opacity-100");
+      }, 10); // sadece 10ms gecikme animasyonun başlamasını sağlar
+    } else {
+      // önce animasyonlu çıkış ver
+      popupRef.current?.classList.remove("translate-y-0", "opacity-100");
+      popupRef.current?.classList.add("translate-y-10", "opacity-0");
+
+      // sonra DOM'dan kaldır
+      const timeout = setTimeout(() => setIsVisible(false), 300);
+      return () => clearTimeout(timeout);
+    }
+  }, [showChat]);
 
   useEffect(() => {
     i18n.changeLanguage(language);
@@ -199,11 +233,16 @@ export default function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!recaptchaToken) {
+      alert("Lütfen reCAPTCHA doğrulamasını tamamlayın.");
+      return;
+    }
+
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, token: recaptchaToken }),
       });
 
       if (!res.ok) throw new Error("Gönderilemedi");
@@ -227,6 +266,8 @@ export default function Home() {
         />
       </Head>
       // Menu bar
+
+      
       {/* Apple-like Navbar */}
       <nav className="apple-navbar">
         <div className="flex items-center space-x-2 ml-15">
@@ -252,7 +293,7 @@ export default function Home() {
             Online Kayıt
           </a>
         </div>
-        <div className="apple-navbar-right relative">
+        <div className=" flex apple-navbar-right relative gap-x-4">
           <ThemeToggle />
           <button
             onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -300,7 +341,7 @@ export default function Home() {
             right: "5px",
             width: "300px",
             height: "300px",
-            zIndex: 50,
+            zIndex: 999,
             pointerEvents: "none",
           }}
         ></div>
@@ -309,14 +350,20 @@ export default function Home() {
       {/* Sabit Bize Ulaşın Butonu */}
       <button
         onClick={() => setShowChat(!showChat)}
-        className="fixed bottom-4 right-4 z-50 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full shadow-lg transition duration-300"
+        className="fixed bottom-4 right-4 z-999 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full shadow-lg transition duration-300"
       >
         {t("contactUs")}
       </button>
       {/* Popup Form */}
-      {showChat && (
-        <div className="fixed bottom-20 right-4 z-50 bg-white p-4 rounded-lg shadow-xl w-80">
-          <h2 className="text-lg text-black font-semibold mb-2">{t("contactForm")}</h2>
+      {isVisible && (
+        <div
+          ref={popupRef}
+          className="fixed bottom-20 right-4 z-[1000] bg-white p-4 rounded-lg shadow-xl w-80
+      transform transition-all duration-300 translate-y-10 opacity-0"
+        >
+          <h2 className="text-lg text-black font-semibold mb-2">
+            {t("contactForm")}
+          </h2>
           <form onSubmit={handleSubmit}>
             <input
               type="text"
@@ -343,6 +390,11 @@ export default function Home() {
               value={form.message}
               onChange={handleChange}
               className="w-full text-black p-2 mb-2 border rounded"
+            />
+            <ReCAPTCHA
+              sitekey="6Ld-Hn4rAAAAAKHk4TYueva3c7opk5yZVj1SiDRL"
+              onChange={(token) => setRecaptchaToken(token)}
+              className="my-4"
             />
             <button
               type="submit"
@@ -557,7 +609,7 @@ export default function Home() {
                     : "opacity-0 z-0"
                 } absolute`}
                 style={{
-                  boxShadow: "0 0 20px rgba(255, 255, 255, 0.5)", // Daha küçük cihazlar için daha yumuşak bir gölge
+                  boxShadow: "0 0 20px rgba(255, 255, 255, 0.5)",
                   transition: "opacity 1s ease-in-out",
                 }}
               />
@@ -591,9 +643,16 @@ export default function Home() {
       {/* Spatial.io tarzı yatay kaydırmalı galeri */}
       <section
         id="gallery"
-        className="py-20 bg-transparent text-main dark:text-main-invert bg-[url('/dots-pattern.png')]"
+        onMouseEnter={() => setIsGalleryHovered(true)}
+        onMouseLeave={() => setIsGalleryHovered(false)}
+        className="relative py-20 bg-transparent text-main dark:text-main-invert bg-[url('/dots-pattern.png')]"
       >
-        <div className="container mx-auto px-4">
+        {/* Karartma efekti */}
+        {/* {isGalleryHovered && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm z-40 pointer-events-none transition-opacity duration-300"></div>
+        )} */}
+
+        <div className="container mx-auto px-4 relative z-50">
           <h2 className="text-4xl font-bold mb-10 text-center">
             {t("gallery")}
           </h2>
@@ -614,19 +673,44 @@ export default function Home() {
           >
             <div
               id="scrollGallery"
-              className="flex w-max animate-scrollGallery gap-6"
-              style={{ animationDuration: "20s" }}
+              className="flex animate-scrollGallery gap-6"
+              style={{
+                animation: "scrollGallery 30s linear infinite",
+                minWidth: `${images.length * 2 * 420}px`,
+              }}
             >
-              {/* Sonsuz döngü için 2 defa aynı içerik */}
               {[...images, ...images].map((src, index) => (
                 <div
                   key={index}
-                  className="flex-shrink-0 hover:scale-105 transition-transform duration-500"
+                  onMouseEnter={() => setHoveredImageIndex(index)}
+                  onMouseLeave={() => setHoveredImageIndex(null)}
+                  className={`flex-shrink-0 transition-transform duration-500 transform ${
+                    hoveredImageIndex === index ? "scale-105 z-50" : ""
+                  } ${
+                    hoveredImageIndex !== null && hoveredImageIndex !== index
+                      ? "opacity-30"
+                      : "opacity-100"
+                  }`}
+                  style={{
+                    width: "400px",
+                    height: "300px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "#111827",
+                    borderRadius: "1rem",
+                    overflow: "hidden",
+                    transition: "opacity 0.3s ease, transform 0.3s ease",
+                  }}
                 >
                   <img
                     src={src}
                     alt={`Gallery Image ${index + 1}`}
-                    className="h-[400px] w-auto object-contain rounded-xl"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
                   />
                 </div>
               ))}
