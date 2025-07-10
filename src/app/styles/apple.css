@@ -256,6 +256,15 @@ html, body {
     color: #202124;
     cursor: pointer;
   }
+
+  @keyframes scrollGallery {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
   @media (max-width: 768px) {
     .apple-navbar {
       height: 56px;
