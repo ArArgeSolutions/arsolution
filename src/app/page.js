@@ -298,37 +298,46 @@ export default function Home() {
         </div>
         <div className=" flex apple-navbar-right relative gap-x-4">
           <ThemeToggle />
-          <button
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="bg-black text-white font-medium py-2 px-4 border border-gray-600 rounded hover:bg-gray-800 transition"
-          >
-            {language === "tr"
-              ? "Türkçe"
-              : language === "en"
-              ? "English"
-              : "中文"}
-          </button>
+          <div className="relative inline-block text-left">
+  <button
+    onClick={() => setDropdownOpen(!dropdownOpen)}
+    className="bg-black text-white font-medium py-2 px-4 border border-gray-600 rounded hover:bg-gray-800 transition-all duration-300 flex items-center gap-2"
+  >
+    🌐 {language === "tr" ? "Türkçe" : language === "en" ? "English" : "中文"}
+    <span
+      className={`transform transition-transform duration-300 ${
+        dropdownOpen ? "rotate-180" : ""
+      }`}
+    >
+      ▾
+    </span>
+  </button>
 
-          {dropdownOpen && (
-            <ul className="absolute right-0 mt-2 w-32 bg-black text-white border border-gray-600 rounded shadow-lg z-50">
-              {[
-                { value: "tr", label: "Türkçe" },
-                { value: "en", label: "English" },
-                { value: "zh", label: "中文" },
-              ].map((lang) => (
-                <li
-                  key={lang.value}
-                  className="px-4 py-2 hover:bg-blue-600 hover:text-white cursor-pointer"
-                  onClick={() => {
-                    setLanguage(lang.value);
-                    setDropdownOpen(false);
-                  }}
-                >
-                  {lang.label}
-                </li>
-              ))}
-            </ul>
-          )}
+  <ul
+    className={`absolute right-0 mt-2 w-36 bg-black text-white border border-gray-600 rounded shadow-lg z-50 overflow-hidden transition-all duration-300 origin-top transform ${
+      dropdownOpen
+        ? "scale-100 opacity-100"
+        : "scale-95 opacity-0 pointer-events-none"
+    }`}
+  >
+    {[
+      { value: "tr", label: "Türkçe" },
+      { value: "en", label: "English" },
+      { value: "zh", label: "中文" },
+    ].map((lang) => (
+      <li
+        key={lang.value}
+        className="px-4 py-2 hover:bg-blue-600 cursor-pointer transition-colors duration-200"
+        onClick={() => {
+          setLanguage(lang.value);
+          setDropdownOpen(false);
+        }}
+      >
+        {lang.label}
+      </li>
+    ))}
+  </ul>
+</div>
         </div>
       </nav>
       {/* Main Section */}
